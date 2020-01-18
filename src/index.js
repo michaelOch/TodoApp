@@ -1,3 +1,4 @@
+import appName from './AppName';
 import Project from './Project';
 import TodoItem from './TodoItem';
 import ProjectDisplayUI from './ProjectDisplayUI';
@@ -13,7 +14,7 @@ const content = document.querySelector('#content');
 
 content.innerHTML = `${ProjectDisplayUI('Project 1').outerHTML}`;
 content.dataset.project = 'Project 1';
-Store.displayTodo('Project 1');
+Store.displayTodo(appName, 'Project 1');
 
 document.body.addEventListener('click', function(e) {
     console.log(e.target);
@@ -27,9 +28,8 @@ document.body.addEventListener('click', function(e) {
     //  
     if(e.target.classList.contains('project')) {
         content.dataset.project = e.target.textContent;
-        console.log(content.dataset.project);
         content.innerHTML = `${ProjectDisplayUI(e.target.textContent).outerHTML}`;
-        Store.displayTodo(e.target.textContent);
+        Store.displayTodo(appName, e.target.textContent);
 
         // document.querySelector('.datepicker').datepicker();
 
@@ -43,7 +43,6 @@ document.body.addEventListener('click', function(e) {
         const name = document.querySelector('#project-name').value;
         
         const project = new Project(name, Date.now());
-        console.log(project);
 
         const sideNav = document.querySelector('.sidenav');
         const nav = document.querySelector('#nav-ul');
@@ -56,20 +55,10 @@ document.body.addEventListener('click', function(e) {
         sideNav.appendChild(listItem);
         nav.appendChild(listItemClone);
 
-        console.log(project);
         document.querySelector('#project-name').value = '';
 
         e.preventDefault();
     }
-
-    //  Delete Project
-    // if(e.target.classList.contains('delete-project')) {
-    //     const text = e.target.parentElement.parentElement.textContent;
-    //     // Store.removeProject();
-    //     console.log(text);
-
-    //     e.preventDefault();
-    // }
 
     //  Add Task
     if(e.target.id === 'add-task') {
@@ -89,7 +78,7 @@ document.body.addEventListener('click', function(e) {
             todoItem.addTodoToList(taskId, todo);
 
             //  Add todo to LS
-            Store.addTodo(content.dataset.project, todo);
+            Store.addTodo(appName, content.dataset.project, todo);
 
             document.querySelector('#title').value = document.querySelector('#description').value = document.querySelector('#dueDate').value = '';
             document.querySelector('#priority').checked = false;
@@ -104,8 +93,7 @@ document.body.addEventListener('click', function(e) {
     if(e.target.classList.contains('delete')) {
         const todoItem = new TodoItem();
         todoItem.removeTodoFromList(e.target);
-        console.log(e.target.parentElement.parentElement.parentElement.getAttribute('data-attribute'));
-        Store.removeTodo(content.dataset.project, e.target.parentElement.parentElement.parentElement.getAttribute('data-attribute'));
+        Store.removeTodo(appName, content.dataset.project, e.target.parentElement.parentElement.parentElement.getAttribute('data-attribute'));
 
         e.preventDefault();
     }
@@ -113,9 +101,7 @@ document.body.addEventListener('click', function(e) {
     //  Edit Task
     if(e.target.classList.contains('edit')) {
         const id = e.target.parentElement.parentElement.parentElement.getAttribute('data-attribute');
-        console.log(id);
-        const todo = Store.editTodo(content.dataset.project, id);
-        console.log(todo);
+        const todo = Store.editTodo(appName, content.dataset.project, id);
         document.body.appendChild(EditModal(todo[0].id, todo[0].title, todo[0].description, todo[0].dueDate, todo[0].priority));
         document.querySelector('.bg-modal').style.display = 'flex';
 
@@ -137,32 +123,28 @@ document.body.addEventListener('click', function(e) {
         const priority = document.querySelector('#edit-priority').checked;
 
         //  Update Editted Todo in LS
-        Store.updateEdittedTodo(content.dataset.project, taskId, title, description, dueDate, priority);
+        Store.updateEdittedTodo(appName, content.dataset.project, taskId, title, description, dueDate, priority);
 
         //  Clear UI displayed Todos
         document.querySelector('.collection').innerHTML = '';
 
         //  Display updated values on UI
-        Store.displayTodo(content.dataset.project);
+        Store.displayTodo(appName, content.dataset.project);
 
         // document.querySelector('.bg-modal').style.display = 'none';
         document.body.removeChild(document.querySelector('.bg-modal'));
-
-        // taskId = title = description = dueDate = '';
-        // priority = false;
 
         e.preventDefault();
     }
 
     //  Task Completed
     if(e.target.classList.contains('filled-in')) {
-        console.log(e.target.parentElement.parentElement.getAttribute('data-attribute'));
-        Store.updateTodo(content.dataset.project, e.target.parentElement.parentElement.getAttribute('data-attribute'));
+        Store.completeTodo(appName, content.dataset.project, e.target.parentElement.parentElement.getAttribute('data-attribute'));
 
         //  Clear UI displayed Todos
         document.querySelector('.collection').innerHTML = '';
 
         //  Display updated values on UI
-        Store.displayTodo(content.dataset.project);
+        Store.displayTodo(appName, content.dataset.project);
     }
 });

@@ -1,31 +1,53 @@
+import appName from './AppName';
 import TodoItem from './TodoItem';
 import MenuItem from './Menu';
 
 class Store {
-    static getTodo(project) {
-        let myTodo;
-        if(localStorage.getItem(project) === null) {
-            myTodo = [];
+    static getTodo(app) {
+        let myProjects;
+        if(localStorage.getItem(app) === null) {
+            myProjects = {};
         } else {
-            myTodo = JSON.parse(localStorage.getItem(project));
+            myProjects = JSON.parse(localStorage.getItem(app));
         }
 
-        return myTodo;
+        return myProjects;
+    }
+
+    static addProject(app, project) {
+        const projects = Store.getTodo(app);
+        projects[project] = {};
+    }
+
+    static addTodo(app, project, todo) {
+        const projects = Store.getTodo(app);
+        let myTodos;
+        if(projects[project] !== undefined) {
+            const todos = projects[project].todos;
+            todos.push(todo);
+            
+            localStorage.setItem(app, JSON.stringify(projects));
+        } else {
+            projects[project] = {};
+            myTodos = [];
+            myTodos.push(todo);
+            projects[project]["todos"] = myTodos;
+
+            localStorage.setItem(app, JSON.stringify(projects));
+        }
     }
 
     static displayListOfProjects() {
-        for(let i = 0; i < localStorage.length; i++) {
+        const projects = Store.getTodo(appName);
+        for(let i = 0; i < Object.keys(projects).length; i++) {
             const menuItem = new MenuItem();
-            menuItem.addMenuToNav(localStorage.key(i));
+            menuItem.addMenuToNav(Object.keys(projects)[i]);
         }
     }
 
-    static removeProject(project) {
-        localStorage.removeItem(project);
-    }
-
-    static displayTodo(project) {
-        const todos = Store.getTodo(project);
+    static displayTodo(app, project) {
+        const projects = Store.getTodo(app);
+        const todos = projects[project]["todos"];
 
         todos.forEach(function(todo) {
             //  Instantiate UI
@@ -35,16 +57,9 @@ class Store {
         });
     }
 
-    static addTodo(project, todo) {
-        const todos = Store.getTodo(project);
-        
-        todos.push(todo);
-
-        localStorage.setItem(project, JSON.stringify(todos));
-    }
-
-    static removeTodo(project, todoInd) {
-        const todos = Store.getTodo(project);
+    static removeTodo(app, project, todoInd) {
+        const projects = Store.getTodo(app);
+        const todos = projects[project]["todos"];
 
         todos.forEach(function(todo, index) {
             if(todo.id == todoInd) {
@@ -52,33 +67,36 @@ class Store {
             }
         });
 
-        localStorage.setItem(project, JSON.stringify(todos));
+        localStorage.setItem(app, JSON.stringify(projects));
     }
 
-    static updateTodo(project, todoInd){
-        const todos = Store.getTodo(project);
+    static completeTodo(app, project, todoInd){
+        const projects = Store.getTodo(app);
+        const todos = projects[project]["todos"];
         const newTodos = todos.map(todo => {
             if(todo.id === todoInd) {
                 todo.isComplete = !(todo.isComplete);
-                console.log(`isComplete: ${todo.isComplete}`);
             }
 
             return todo;
         });
 
-        localStorage.setItem(project, JSON.stringify(newTodos));
+        projects[project]["todos"] = newTodos;
+
+        localStorage.setItem(app, JSON.stringify(projects));
     }
 
-    static editTodo (project, todoInd) {
-        const todos = Store.getTodo(project);
+    static editTodo (app, project, todoInd) {
+        const projects = Store.getTodo(app);
+        const todos = projects[project]["todos"];
         const newTodo = todos.filter(todo => todo.id === todoInd);
 
-        console.log(newTodo);
         return newTodo;
     }
 
-    static updateEdittedTodo(project, todoInd, title, description, dueDate, priority){
-        const todos = Store.getTodo(project);
+    static updateEdittedTodo(app, project, todoInd, title, description, dueDate, priority){
+        const projects = Store.getTodo(app);
+        const todos = projects[project]["todos"];
         const newTodos = todos.map(todo => {
             if(todo.id === todoInd) {
                 todo.title = title;
@@ -90,7 +108,9 @@ class Store {
             return todo;
         });
 
-        localStorage.setItem(project, JSON.stringify(newTodos));
+        projects[project]["todos"] = newTodos;
+
+        localStorage.setItem(app, JSON.stringify(projects));
     }
 }
 
