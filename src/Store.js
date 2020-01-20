@@ -14,11 +14,6 @@ class Store {
         return myProjects;
     }
 
-    static addProject(app, project) {
-        const projects = Store.getTodo(app);
-        projects[project] = {};
-    }
-
     static addTodo(app, project, todo) {
         const projects = Store.getTodo(app);
         let myTodos;
@@ -47,14 +42,16 @@ class Store {
 
     static displayTodo(app, project) {
         const projects = Store.getTodo(app);
-        const todos = projects[project]["todos"];
+        if(projects[project]) {
+            const todos = projects[project]["todos"];
 
-        todos.forEach(function(todo) {
-            //  Instantiate UI
-            const todoItem = new TodoItem();
-
-            todoItem.addTodoToListFromStore(todo);
-        });
+            todos.forEach(function(todo) {
+                //  Instantiate UI
+                const todoItem = new TodoItem();
+    
+                todoItem.addTodoToListFromStore(todo);
+            });
+        }
     }
 
     static removeTodo(app, project, todoInd) {

@@ -6,7 +6,7 @@ class TodoItem {
         listItem.className = 'collection-item';
         listItem.innerHTML = `
             <label class="title-label">
-                <input type="checkbox" class="filled-in"/>
+                <input type="checkbox" id="complete" class="filled-in"/>
                 <span class="${colour}">${todo.title}</span>
                 <a href="" class="secondary-content">
                     <i class="material-icons grey-text text-darken-4 left delete">delete</i>
@@ -26,7 +26,7 @@ class TodoItem {
         listItem.className = 'collection-item';
         listItem.innerHTML = `
             <label class="title-label">
-                <input type="checkbox" class="filled-in" ${todo.isComplete ? 'checked' : ''} />
+                <input type="checkbox" id="complete" class="filled-in" ${todo.isComplete ? 'checked' : ''} />
                 <span class="${colour}" style="${todo.isComplete ? 'text-decoration: line-through' : ''}">${todo.title}</span>
                 <a href="" class="secondary-content">
                     <i class="material-icons grey-text text-darken-4 left delete">delete</i>

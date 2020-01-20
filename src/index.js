@@ -13,8 +13,8 @@ document.addEventListener('DOMContentLoaded', Store.displayListOfProjects);
 const content = document.querySelector('#content');
 
 content.innerHTML = `${ProjectDisplayUI('Project 1').outerHTML}`;
-content.dataset.project = 'Project 1';
-Store.displayTodo(appName, 'Project 1');
+// content.dataset.project = 'Project 1';
+// Store.displayTodo(appName, 'Project 1');
 
 document.body.addEventListener('click', function(e) {
     console.log(e.target);
@@ -138,7 +138,7 @@ document.body.addEventListener('click', function(e) {
     }
 
     //  Task Completed
-    if(e.target.classList.contains('filled-in')) {
+    if(e.target.id === 'complete') {
         Store.completeTodo(appName, content.dataset.project, e.target.parentElement.parentElement.getAttribute('data-attribute'));
 
         //  Clear UI displayed Todos
