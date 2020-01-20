@@ -61,8 +61,15 @@ document.body.addEventListener('click', function(e) {
 
     //  Delete Project
     if(e.target.classList.contains('delete-project')) {
-        // console.log(e.target.parentElement.childNodes[0].nodeValue);
+        const sidenav = document.querySelector('.sidenav');
+        const nav = document.querySelector('#nav-ul');
         Store.deleteProject(appName, e.target.parentElement.childNodes[0].nodeValue);
+        while(sidenav.childNodes.length > 1) {
+            nav.removeChild(nav.lastChild);
+            sidenav.removeChild(sidenav.lastChild);
+        }
+        
+        Store.displayListOfProjects();
 
         e.preventDefault();
     }
