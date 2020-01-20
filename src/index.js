@@ -17,7 +17,7 @@ content.innerHTML = `${ProjectDisplayUI('Project 1').outerHTML}`;
 // Store.displayTodo(appName, 'Project 1');
 
 document.body.addEventListener('click', function(e) {
-    console.log(e.target);
+    // console.log(e.target);
     //  New Project event listener
     if(e.target.classList.contains('new-project') || e.target.parentElement.classList.contains('new-project')) {
         content.innerHTML = `${CreateProjectUI().outerHTML}`;
