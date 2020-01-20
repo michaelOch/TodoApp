@@ -17,7 +17,7 @@ content.innerHTML = `${ProjectDisplayUI('Project 1').outerHTML}`;
 // Store.displayTodo(appName, 'Project 1');
 
 document.body.addEventListener('click', function(e) {
-    // console.log(e.target);
+    console.log(e.target);
     //  New Project event listener
     if(e.target.classList.contains('new-project') || e.target.parentElement.classList.contains('new-project')) {
         content.innerHTML = `${CreateProjectUI().outerHTML}`;
@@ -27,13 +27,9 @@ document.body.addEventListener('click', function(e) {
 
     //  
     if(e.target.classList.contains('project')) {
-        content.dataset.project = e.target.textContent;
-        content.innerHTML = `${ProjectDisplayUI(e.target.textContent).outerHTML}`;
-        Store.displayTodo(appName, e.target.textContent);
-
-        // document.querySelector('.datepicker').datepicker();
-
-        // document.querySelector('.sidenav').style.display = 'none';
+        content.dataset.project = e.target.childNodes[0].nodeValue;
+        content.innerHTML = `${ProjectDisplayUI(e.target.childNodes[0].nodeValue).outerHTML}`;
+        Store.displayTodo(appName, e.target.childNodes[0].nodeValue);
 
         e.preventDefault();
     }
@@ -50,12 +46,23 @@ document.body.addEventListener('click', function(e) {
         listItem.innerHTML = `
             <a class="project">${project.getName()}</a>
         `;
-        const listItemClone = listItem.cloneNode(true);
+        const listItemClone = document.createElement('li');
+        listItemClone.innerHTML = `
+            <a href="" class="project">${project.getName()}<i class="material-icons grey-text text-darken-4 left delete-project">delete</i></a>
+        `;
         
-        sideNav.appendChild(listItem);
-        nav.appendChild(listItemClone);
+        nav.appendChild(listItem);
+        sideNav.appendChild(listItemClone);
 
         document.querySelector('#project-name').value = '';
+
+        e.preventDefault();
+    }
+
+    //  Delete Project
+    if(e.target.classList.contains('delete-project')) {
+        // console.log(e.target.parentElement.childNodes[0].nodeValue);
+        Store.deleteProject(appName, e.target.parentElement.childNodes[0].nodeValue);
 
         e.preventDefault();
     }

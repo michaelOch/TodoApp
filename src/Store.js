@@ -109,6 +109,14 @@ class Store {
 
         localStorage.setItem(app, JSON.stringify(projects));
     }
+
+    static deleteProject(app, project) {
+        console.log('delete project');
+        const projects = Store.getTodo(app);
+        delete projects[project];
+
+        localStorage.setItem(app, JSON.stringify(projects));
+    }
 }
 
 export default Store;
