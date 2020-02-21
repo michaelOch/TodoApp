@@ -13,11 +13,9 @@ document.addEventListener('DOMContentLoaded', Store.displayListOfProjects);
 const content = document.querySelector('#content');
 
 content.innerHTML = `${ProjectDisplayUI('Project 1').outerHTML}`;
-// content.dataset.project = 'Project 1';
-// Store.displayTodo(appName, 'Project 1');
 
 document.body.addEventListener('click', function(e) {
-    console.log(e.target);
+    // console.log(e.target);
     //  New Project event listener
     if(e.target.classList.contains('new-project') || e.target.parentElement.classList.contains('new-project')) {
         content.innerHTML = `${CreateProjectUI().outerHTML}`;
@@ -36,25 +34,29 @@ document.body.addEventListener('click', function(e) {
 
     //  Add Project
     if(e.target.id === 'add-project-btn') {
-        const name = document.querySelector('#project-name').value;
-        
-        const project = new Project(name, Date.now());
+        if(document.querySelector('#project-name').value !== '') {
+            const name = document.querySelector('#project-name').value;
+            
+            const project = new Project(name, Date.now());
 
-        const sideNav = document.querySelector('.sidenav');
-        const nav = document.querySelector('#nav-ul');
-        const listItem = document.createElement('li');
-        listItem.innerHTML = `
-            <a class="project">${project.getName()}</a>
-        `;
-        const listItemClone = document.createElement('li');
-        listItemClone.innerHTML = `
-            <a href="" class="project">${project.getName()}<i class="material-icons grey-text text-darken-4 left delete-project">delete</i></a>
-        `;
-        
-        nav.appendChild(listItem);
-        sideNav.appendChild(listItemClone);
+            const sideNav = document.querySelector('.sidenav');
+            const nav = document.querySelector('#nav-ul');
+            const listItem = document.createElement('li');
+            listItem.innerHTML = `
+                <a class="project">${project.getName()}</a>
+            `;
+            const listItemClone = document.createElement('li');
+            listItemClone.innerHTML = `
+                <a href="" class="project">${project.getName()}<i class="material-icons grey-text text-darken-4 left delete-project">delete</i></a>
+            `;
+            
+            nav.appendChild(listItem);
+            sideNav.appendChild(listItemClone);
 
-        document.querySelector('#project-name').value = '';
+            document.querySelector('#project-name').value = '';
+        } else {
+            alert('You have to give the project a name!');
+        }
 
         e.preventDefault();
     }
